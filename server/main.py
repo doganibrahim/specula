@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
+from pydantic import BaseModel
 from .services.job_service import search_jobs
 
 app = FastAPI(
@@ -34,6 +35,20 @@ def search_jobs_endpoint(query: str):
         return {"status": "success", "count": len(jobs), "data": [job.dict() for job in jobs]}
     except Exception as e:
         print(f"Error processing request: {e}")
+        return {"status": "error", "message": str(e)}
+
+class AnalyzeRequest(BaseModel):
+    descriptions: list[str]
+
+@app.post("/api/v1/analyze")
+def analyze_market(request: AnalyzeRequest):
+    try:
+        from server.services.llm_service import MarketAnalyzer
+        analyzer = MarketAnalyzer()
+        data = analyzer.analyze_skills(request.descriptions)
+        return {"status": "success", "data": data}
+    except Exception as e:
+        print(f"Analysis failed: {e}")
         return {"status": "error", "message": str(e)}
 
 if __name__ == "__main__":

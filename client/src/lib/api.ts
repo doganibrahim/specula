@@ -17,6 +17,11 @@ interface SearchResponse {
     data: JobPost[];
 }
 
+interface AnalyzeResponse {
+    status: string;
+    data: Record<string, number>;
+}
+
 const api = axios.create({
     baseURL: 'http://localhost:8000/api/v1',
 });
@@ -24,6 +29,13 @@ const api = axios.create({
 export const searchJobs = async (query: string): Promise<JobPost[]> => {
     const response = await api.get<SearchResponse>('/jobs/search', {
         params: { query },
+    });
+    return response.data.data;
+};
+
+export const analyzeSkills = async (descriptions: string[]): Promise<Record<string, number>> => {
+    const response = await api.post<AnalyzeResponse>('/analyze', {
+        descriptions,
     });
     return response.data.data;
 };
