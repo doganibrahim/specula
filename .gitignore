@@ -1,9 +1,7 @@
-# General
 .DS_Store
 .vscode/
 *.log
 
-# Python (Server)
 __pycache__/
 *.py[cod]
 *$py.class
@@ -12,7 +10,6 @@ venv/
 .pytest_cache/
 server/data/cache.json
 
-# Node (Client - redundancy to be safe)
 node_modules/
 dist/
 .env.local
